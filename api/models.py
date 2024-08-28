@@ -254,6 +254,12 @@ class Schedule(models.Model):
 def generate_key():
     return binascii.hexlify(os.urandom(20)).decode()
 
+def load_usersettings():
+    with open(
+        os.path.join(Path(__file__).parent.absolute(), "migrations/usersettings.json"),
+        "r",
+    ) as fh:
+        return json.load(fh)
 
 class UserSettings(models.Model):
     """
@@ -270,7 +276,7 @@ class UserSettings(models.Model):
     )
     token = models.CharField(max_length=40)
     created = models.DateTimeField(auto_now_add=True)
-    settings = models.JSONField(default=data)
+    settings = models.JSONField(default=default_usersettings)
     salt_permissions = models.TextField()
 
     def generate_token(self):
