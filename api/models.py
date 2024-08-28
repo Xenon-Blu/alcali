@@ -254,6 +254,12 @@ class Schedule(models.Model):
 def generate_key():
     return binascii.hexlify(os.urandom(20)).decode()
 
+def load_usersettings():
+    with open(
+        os.path.join(Path(__file__).parent.absolute(), "migrations/usersettings.json"),
+        "r",
+    ) as fh:
+        return json.load(fh)
 
 import binascii
 import json
@@ -511,7 +517,7 @@ class Schedule(models.Model):
 def generate_key():
     return binascii.hexlify(os.urandom(20)).decode()
 
-def load_default_usersettings():
+def load_usersettings():
     with open(
         os.path.join(Path(__file__).parent.absolute(), "migrations/usersettings.json"),
         "r",
@@ -522,18 +528,13 @@ class UserSettings(models.Model):
     """
     The default authorization token model.
     """
-
-    with open(
-        os.path.join(Path(__file__).parent.absolute(), "migrations/usersettings.json"),
-        "r",
-    ) as fh:
-        data = json.load(fh)
+    
     user = models.OneToOneField(
         User, primary_key=True, related_name="user_settings", on_delete=models.CASCADE
     )
     token = models.CharField(max_length=40)
     created = models.DateTimeField(auto_now_add=True)
-    settings = models.JSONField((default=load_default_usersettings)
+    settings = models.JSONField(default=load_usersettings)
     salt_permissions = models.TextField()
 
     def generate_token(self):
