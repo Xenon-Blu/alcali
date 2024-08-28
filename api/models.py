@@ -266,11 +266,6 @@ class UserSettings(models.Model):
     The default authorization token model.
     """
 
-    with open(
-        os.path.join(Path(__file__).parent.absolute(), "migrations/usersettings.json"),
-        "r",
-    ) as fh:
-        data = json.load(fh)
     user = models.OneToOneField(
         User, primary_key=True, related_name="user_settings", on_delete=models.CASCADE
     )
